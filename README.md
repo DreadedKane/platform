@@ -7,6 +7,7 @@ Unity package for initializing platforms.
 * Verifies user entitlements.
 
 ## Requirements
+* [Core](https://github.com/DreadedKane/core)
 
 ### Android
 * [Android Platform](https://github.com/DreadedKane/platform-android)
