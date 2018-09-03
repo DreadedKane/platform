@@ -10,19 +10,17 @@ namespace HomewreckersStudio
 {
     [RequireComponent(typeof(Platform))]
     [RequireComponent(typeof(Entitlements))]
-    public sealed class PlatformManager : MonoBehaviour
+    [RequireComponent(typeof(User))]
+    public sealed class PlatformManager : Request
     {
-        /** Invoked when the platform has been intialized. */
-        private event Action m_success;
-
-        /** Invoked when the platform fails to initialize. */
-        private event Action m_failure;
-
         /** Used to initialize the platform. */
         private Platform m_platform;
 
         /** Used to verify the entitlements. */
         private Entitlements m_entitlements;
+
+        /** Used to get the user's data. */
+        private User m_user;
 
         /**
          * Gets the required components.
@@ -31,6 +29,7 @@ namespace HomewreckersStudio
         {
             m_platform = GetComponent<Platform>();
             m_entitlements = GetComponent<Entitlements>();
+            m_user = GetComponent<User>();
         }
 
         /**
@@ -38,8 +37,7 @@ namespace HomewreckersStudio
          */
         public void Initialize(Action success, Action failure)
         {
-            m_success = success;
-            m_failure = failure;
+            SetEvents(success, failure);
 
             m_platform.Initialize(OnInitializeSuccess, OnFailure);
         }
@@ -49,29 +47,15 @@ namespace HomewreckersStudio
          */
         private void OnInitializeSuccess()
         {
-            m_entitlements.Verify(OnSuccess, OnFailure);
+            m_entitlements.Verify(OnEntitlementsSuccess, OnFailure);
         }
 
         /**
-         * Invokes the success event.
+         * Gets the user's data.
          */
-        private void OnSuccess()
+        private void OnEntitlementsSuccess()
         {
-            Event.Invoke(m_success);
-
-            m_success = null;
-            m_failure = null;
-        }
-
-        /**
-         * Invokes the failure event.
-         */
-        private void OnFailure()
-        {
-            Event.Invoke(m_failure);
-
-            m_success = null;
-            m_failure = null;
+            m_user.Initialize(OnSuccess, OnFailure);
         }
     }
 }
