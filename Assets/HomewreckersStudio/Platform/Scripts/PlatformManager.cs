@@ -4,13 +4,9 @@
  */
 
 using System;
-using UnityEngine;
 
 namespace HomewreckersStudio
 {
-    [RequireComponent(typeof(Platform))]
-    [RequireComponent(typeof(Entitlements))]
-    [RequireComponent(typeof(User))]
     public sealed class PlatformManager : Request
     {
         /** Used to initialize the platform. */
@@ -23,13 +19,35 @@ namespace HomewreckersStudio
         private User m_user;
 
         /**
-         * Gets the required components.
+         * Gets the entitlements component.
+         */
+        public Entitlements Entitlements
+        {
+            get
+            {
+                return m_entitlements;
+            }
+        }
+
+        /**
+         * Gets the user component.
+         */
+        public User User
+        {
+            get
+            {
+                return m_user;
+            }
+        }
+
+        /**
+         * Adds the required components.
          */
         private void Awake()
         {
-            m_platform = GetComponent<Platform>();
-            m_entitlements = GetComponent<Entitlements>();
-            m_user = GetComponent<User>();
+            m_platform = gameObject.AddComponent<Platform>();
+            m_entitlements = gameObject.AddComponent<Entitlements>();
+            m_user = gameObject.AddComponent<User>();
         }
 
         /**
