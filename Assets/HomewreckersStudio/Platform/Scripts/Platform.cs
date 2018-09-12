@@ -8,21 +8,40 @@ using UnityEngine;
 
 namespace HomewreckersStudio
 {
-    public sealed partial class Platform : Request
+    /**
+     * Initialises the platform.
+     */
+    public sealed partial class Platform : MonoBehaviour
     {
-        /** Implemented in platform-specific partial class. */
-        partial void Internal();
+        /** Used to invoke callbacks. */
+        private Request m_request;
 
         /**
-         * Defers to platform-specific method.
+         * Creates the request object.
          */
-        public void Initialize(Action success, Action failure)
+        private void Awake()
         {
-            Debug.Log("Initializing platform");
+            m_request = new Request();
 
-            SetEvents(success, failure);
-
-            Internal();
+            AwakePartial();
         }
+
+        /** Implemented in platform-specific module. */
+        partial void AwakePartial();
+
+        /**
+         * Defers to platform-specific module.
+         */
+        public void Initialise(Action success, Action failure)
+        {
+            Debug.Log("Initialising platform");
+
+            m_request.SetListeners(success, failure);
+
+            InitialisePartial();
+        }
+
+        /** Implemented in platform-specific module. */
+        partial void InitialisePartial();
     }
 }

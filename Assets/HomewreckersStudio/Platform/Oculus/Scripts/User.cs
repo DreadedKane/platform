@@ -13,7 +13,9 @@ using OculusUser = Oculus.Platform.Models.User;
 
 namespace HomewreckersStudio
 {
-    [RequireComponent(typeof(SpriteDownload))]
+    /**
+     * Gets the user's username and avatar.
+     */
     public sealed partial class User
     {
         /** Used to download the user's avatar. */
@@ -26,11 +28,11 @@ namespace HomewreckersStudio
         private Sprite m_image;
 
         /**
-         * Gets the required components.
+         * Adds the required components.
          */
-        private void Awake()
+        partial void AwakePartial()
         {
-            m_spriteDownload = GetComponent<SpriteDownload>();
+            m_spriteDownload = gameObject.AddComponent<SpriteDownload>();
         }
 
         /**
@@ -52,7 +54,7 @@ namespace HomewreckersStudio
         /**
          * Gets the user's data.
          */
-        partial void InitializePartial()
+        partial void InitialisePartial()
         {
             Users.GetLoggedInUser().OnComplete(OnComplete);
         }
@@ -69,7 +71,7 @@ namespace HomewreckersStudio
 
                 Debug.LogError("Get user failed: " + error.Message);
 
-                OnFailure();
+                m_request.OnFailure();
             }
             else
             {
@@ -80,11 +82,11 @@ namespace HomewreckersStudio
 
                 if (string.IsNullOrEmpty(user.ImageURL))
                 {
-                    OnSuccess();
+                    m_request.OnSuccess();
                 }
                 else
                 {
-                    m_spriteDownload.Download(user.ImageURL, OnSpriteSuccess, OnFailure);
+                    m_spriteDownload.Download(user.ImageURL, OnSpriteSuccess, m_request.OnFailure);
                 }
             }
         }
@@ -96,7 +98,7 @@ namespace HomewreckersStudio
         {
             m_image = m_spriteDownload.Sprite;
 
-            OnSuccess();
+            m_request.OnSuccess();
         }
     }
 }

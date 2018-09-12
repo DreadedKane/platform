@@ -12,11 +12,19 @@ using UnityEngine;
 
 namespace HomewreckersStudio
 {
-    public sealed class SessionTicket : Request
+    /**
+     * Gets and verifies the session ticket.
+     */
+    public sealed class SessionTicket : MonoBehaviour
     {
-        /** Seconds to wait before timing out. */
+        [Header("Properties")]
+
         [SerializeField]
+        [Tooltip("Seconds to wait before timing out.")]
         private float m_timeout = 10f;
+
+        /** Used to invoke callbacks. */
+        private Request m_request;
 
         /** The coroutine that invokes the ticket request. */
         private IEnumerator m_coroutine;
@@ -50,6 +58,14 @@ namespace HomewreckersStudio
         }
 
         /**
+         * Creates the request object.
+         */
+        private void Awake()
+        {
+            m_request = new Request();
+        }
+
+        /**
          * Creates a callback for the session ticket.
          */
         private void OnEnable()
@@ -60,18 +76,13 @@ namespace HomewreckersStudio
         /**
          * Attempts to get a session ticket.
          */
-        public void Initialize(Action success, Action failure)
+        public void Initialise(Action success, Action failure)
         {
-            SetEvents(success, failure);
+            m_request.SetListeners(success, failure);
 
-            if (!m_active)
-            {
-                m_active = true;
+            m_coroutine = SessionTicketCoroutine();
 
-                m_coroutine = SessionTicketCoroutine();
-
-                StartCoroutine(m_coroutine);
-            }
+            StartCoroutine(m_coroutine);
         }
 
         /**
@@ -104,7 +115,7 @@ namespace HomewreckersStudio
 
                 m_ticketString = String.FromByteArray(m_ticket, (int)m_length);
 
-                OnSuccess();
+                m_request.OnSuccess();
             }
             else
             {
@@ -120,7 +131,8 @@ namespace HomewreckersStudio
             Debug.LogError(message);
 
             CancelTicket();
-            OnFailure();
+
+            m_request.OnFailure();
         }
 
         /**

@@ -9,6 +9,9 @@ using UnityEngine;
 
 namespace HomewreckersStudio
 {
+    /**
+     * Verifies the session ticket.
+     */
     public sealed partial class Entitlements
     {
         /** Used to verify entitlements. */
@@ -28,7 +31,7 @@ namespace HomewreckersStudio
         /**
          * Adds the required components.
          */
-        private void Awake()
+        partial void AwakePartial()
         {
             m_sessionTicket = gameObject.AddComponent<SessionTicket>();
         }
@@ -36,9 +39,9 @@ namespace HomewreckersStudio
         /**
          * Attempts to get a session ticket.
          */
-        partial void Internal()
+        partial void VerifyPartial()
         {
-            m_sessionTicket.Initialize(OnTicketSuccess, OnTicketFailure);
+            m_sessionTicket.Initialise(OnTicketSuccess, OnTicketFailure);
         }
 
         /**
@@ -48,7 +51,7 @@ namespace HomewreckersStudio
         {
             Debug.Log("Entitlements verified");
 
-            OnSuccess();
+            m_request.OnSuccess();
         }
 
         /**
@@ -58,7 +61,7 @@ namespace HomewreckersStudio
         {
             Debug.LogError("Couldn't get session ticket");
 
-            OnFailure();
+            m_request.OnFailure();
         }
     }
 }

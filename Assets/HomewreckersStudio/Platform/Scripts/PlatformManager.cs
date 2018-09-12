@@ -7,9 +7,15 @@ using System;
 
 namespace HomewreckersStudio
 {
-    public sealed class PlatformManager : Request
+    /**
+     * Manages the platform, entitlements, and user components.
+     */
+    public sealed class PlatformManager : Singleton<PlatformManager>
     {
-        /** Used to initialize the platform. */
+        /** Used to invoke callbacks. */
+        private Request m_request;
+
+        /** Used to initialise the platform. */
         private Platform m_platform;
 
         /** Used to verify the entitlements. */
@@ -43,29 +49,33 @@ namespace HomewreckersStudio
         /**
          * Adds the required components.
          */
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
+            m_request = new Request();
+
             m_platform = gameObject.AddComponent<Platform>();
             m_entitlements = gameObject.AddComponent<Entitlements>();
             m_user = gameObject.AddComponent<User>();
         }
 
         /**
-         * Initializes the platform.
+         * Initialises the platform.
          */
-        public void Initialize(Action success, Action failure)
+        public void Initialise(Action success, Action failure)
         {
-            SetEvents(success, failure);
+            m_request.SetListeners(success, failure);
 
-            m_platform.Initialize(OnInitializeSuccess, OnFailure);
+            m_platform.Initialise(OnInitialiseSuccess, m_request.OnFailure);
         }
 
         /**
          * Verifies the entitlements.
          */
-        private void OnInitializeSuccess()
+        private void OnInitialiseSuccess()
         {
-            m_entitlements.Verify(OnEntitlementsSuccess, OnFailure);
+            m_entitlements.Verify(OnEntitlementsSuccess, m_request.OnFailure);
         }
 
         /**
@@ -73,7 +83,7 @@ namespace HomewreckersStudio
          */
         private void OnEntitlementsSuccess()
         {
-            m_user.Initialize(OnSuccess, OnFailure);
+            m_user.Initialise(m_request.OnSuccess, m_request.OnFailure);
         }
     }
 }

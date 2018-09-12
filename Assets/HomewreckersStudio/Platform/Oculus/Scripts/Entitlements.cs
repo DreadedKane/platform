@@ -13,12 +13,15 @@ using OculusEntitlements = Oculus.Platform.Entitlements;
 
 namespace HomewreckersStudio
 {
+    /**
+     * Verifies the user's entitlements.
+     */
     public sealed partial class Entitlements
     {
         /**
          * Verifies entitlements.
          */
-        partial void Internal()
+        partial void VerifyPartial()
         {
             OculusEntitlements.IsUserEntitledToApplication().OnComplete(OnComplete);
         }
@@ -35,14 +38,14 @@ namespace HomewreckersStudio
 
                 Debug.LogError("Couldn't verify entitlements: " + error.Message);
 
-                OnFailure();
+                m_request.OnFailure();
             }
             else
             {
                 // Entitlement check succeeded.
                 Debug.Log("Entitlements verified");
 
-                OnSuccess();
+                m_request.OnSuccess();
             }
         }
     }

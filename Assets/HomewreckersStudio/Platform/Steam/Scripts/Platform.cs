@@ -9,32 +9,35 @@ using UnityEngine;
 
 namespace HomewreckersStudio
 {
+    /**
+     * Verifies Steamworks has been initialised.
+     */
     public sealed partial class Platform
     {
         /**
          * Adds the required components.
          */
-        private void Awake()
+        partial void AwakePartial()
         {
             gameObject.AddComponent<SteamManager>();
         }
 
         /**
-         * Checks if Steamworks is initialized.
+         * Checks if Steamworks is initialised.
          */
-        partial void Internal()
+        partial void InitialisePartial()
         {
             if (SteamManager.Initialized)
             {
-                Debug.Log("Platform initialized");
+                Debug.Log("Platform initialised");
 
-                OnSuccess();
+                m_request.OnSuccess();
             }
             else
             {
-                Debug.LogError("Couldn't initialize platform: Steamworks not initialized");
+                Debug.LogError("Couldn't initialise platform: Steamworks not initialised");
 
-                OnFailure();
+                m_request.OnFailure();
             }
         }
     }

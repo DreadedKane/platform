@@ -443,7 +443,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7e6d0adab7ab7f448f2007ea92dd0bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_platformManager: {fileID: 2127690986}
   m_nameText: {fileID: 1518882784}
   m_avatarImage: {fileID: 557532010}
 --- !u!4 &1252534679

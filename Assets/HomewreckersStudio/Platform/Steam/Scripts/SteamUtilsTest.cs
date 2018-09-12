@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace HomewreckersStudio
 {
+    /**
+     * Converts Steam images to textures.
+     */
     public static class SteamUtilsTest
     {
         /**

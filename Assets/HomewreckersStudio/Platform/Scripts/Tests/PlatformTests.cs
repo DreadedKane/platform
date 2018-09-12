@@ -8,18 +8,19 @@ using UnityEngine.UI;
 
 namespace HomewreckersStudio
 {
+    /**
+     * Performs unit tests on the module.
+     */
     public sealed partial class PlatformTests : MonoBehaviour
     {
-        /** Used to initialize the platform. */
-        [SerializeField]
-        private PlatformManager m_platformManager;
+        [Header("Required Components")]
 
-        /** Used to diplay the user's username. */
         [SerializeField]
+        [Tooltip("Used to diplay the user's username.")]
         private Text m_nameText;
 
-        /** Used to diplay the user's avatar. */
         [SerializeField]
+        [Tooltip("Used to diplay the user's avatar.")]
         private Image m_avatarImage;
 
         /**
@@ -29,7 +30,7 @@ namespace HomewreckersStudio
         {
             Debug.Log("Running unit tests");
 
-            TestInitialize();
+            TestInitialise();
         }
 
         /**
@@ -41,13 +42,13 @@ namespace HomewreckersStudio
         }
 
         /**
-         * Initializes the platform.
+         * Initialises the platform.
          */
-        private void TestInitialize()
+        private void TestInitialise()
         {
-            Debug.Log("Testing initialize");
+            Debug.Log("Testing initialise");
 
-            m_platformManager.Initialize(OnPlatformSuccess, OnPlatformFailure);
+            PlatformManager.Instance.Initialise(OnPlatformSuccess, OnPlatformFailure);
         }
 
         /**
@@ -55,8 +56,10 @@ namespace HomewreckersStudio
          */
         private void OnPlatformSuccess()
         {
-            m_nameText.text = m_platformManager.User.Name;
-            m_avatarImage.sprite = m_platformManager.User.Image;
+            User user = PlatformManager.Instance.User;
+
+            m_nameText.text = user.Name;
+            m_avatarImage.sprite = user.Image;
 
             Finish();
         }
@@ -66,7 +69,7 @@ namespace HomewreckersStudio
          */
         private void OnPlatformFailure()
         {
-            Debug.LogError("Initialize failed");
+            Debug.LogError("Initialise failed");
 
             Finish();
         }

@@ -9,16 +9,21 @@ using Oculus.Platform;
 using Oculus.Platform.Models;
 using UnityEngine;
 
+using OculusCore = Oculus.Platform.Core;
+
 namespace HomewreckersStudio
 {
+    /**
+     * Initialises the platform.
+     */
     public sealed partial class Platform
     {
         /**
-         * Initializes the Oculus platform.
+         * Initialises the Oculus platform.
          */
-        partial void Internal()
+        partial void InitialisePartial()
         {
-            Core.AsyncInitialize().OnComplete(OnComplete);
+            OculusCore.AsyncInitialize().OnComplete(OnComplete);
         }
 
         /**
@@ -28,19 +33,19 @@ namespace HomewreckersStudio
         {
             if (message.IsError)
             {
-                // Initialize failed.
+                // Initialise failed.
                 Error error = message.GetError();
 
-                Debug.LogError("Couldn't initialize platform: " + error.Message);
+                Debug.LogError("Couldn't initialise platform: " + error.Message);
 
-                OnFailure();
+                m_request.OnFailure();
             }
             else
             {
-                // Initialize succeeded.
-                Debug.Log("Platform initialized");
+                // Initialise succeeded.
+                Debug.Log("Platform initialised");
 
-                OnSuccess();
+                m_request.OnSuccess();
             }
         }
     }

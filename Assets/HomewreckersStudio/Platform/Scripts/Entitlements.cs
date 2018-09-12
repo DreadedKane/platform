@@ -8,21 +8,40 @@ using UnityEngine;
 
 namespace HomewreckersStudio
 {
-    public sealed partial class Entitlements : Request
+    /**
+     * Verifies the user's entitlements.
+     */
+    public sealed partial class Entitlements : MonoBehaviour
     {
-        /** Implemented in platform-specific partial class. */
-        partial void Internal();
+        /** Used to invoke callbacks. */
+        private Request m_request;
 
         /**
-         * Defers to platform-specific method.
+         * Creates the request object.
+         */
+        private void Awake()
+        {
+            m_request = new Request();
+
+            AwakePartial();
+        }
+
+        /** Implemented in platform-specific module. */
+        partial void AwakePartial();
+
+        /**
+         * Defers to platform-specific module.
          */
         public void Verify(Action success, Action failure)
         {
             Debug.Log("Verifying entitlements");
 
-            SetEvents(success, failure);
+            m_request.SetListeners(success, failure);
 
-            Internal();
+            VerifyPartial();
         }
+
+        /** Implemented in platform-specific module. */
+        partial void VerifyPartial();
     }
 }

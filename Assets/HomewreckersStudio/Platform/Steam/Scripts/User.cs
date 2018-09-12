@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace HomewreckersStudio
 {
+    /**
+     * Gets the user's username and avatar.
+     */
     public sealed partial class User
     {
         /** The user's username. */
@@ -50,7 +53,7 @@ namespace HomewreckersStudio
         /**
          * Gets the user's username and avatar.
          */
-        partial void InitializePartial()
+        partial void InitialisePartial()
         {
             m_name = SteamFriends.GetPersonaName();
 
@@ -61,14 +64,14 @@ namespace HomewreckersStudio
             if (avatar == 0)
             {
                 // There is no avatar for this user.
-                OnSuccess();
+                m_request.OnSuccess();
             }
             else if (avatar != -1)
             {
                 // The avatar is available.
                 m_image = CreateAvatar(avatar);
 
-                OnSuccess();
+                m_request.OnSuccess();
             }
         }
 
@@ -79,7 +82,7 @@ namespace HomewreckersStudio
         {
             m_image = CreateAvatar(callback.m_iImage);
 
-            OnSuccess();
+            m_request.OnSuccess();
         }
 
         /**

@@ -8,8 +8,27 @@ using UnityEngine;
 
 namespace HomewreckersStudio
 {
-    public sealed partial class User : Request
+    /**
+     * Gets the user's username and avatar.
+     */
+    public sealed partial class User : MonoBehaviour
     {
+        /** Used to invoke callbacks. */
+        private Request m_request;
+
+        /**
+         * Creates the request object.
+         */
+        private void Awake()
+        {
+            m_request = new Request();
+
+            AwakePartial();
+        }
+
+        /** Implemented in platform-specific module. */
+        partial void AwakePartial();
+
         /**
          * Gets the user's name.
          */
@@ -25,7 +44,7 @@ namespace HomewreckersStudio
             }
         }
 
-        /** Implemented in platform module. */
+        /** Implemented in platform-specific module. */
         partial void GetNamePartial(ref string name);
 
         /**
@@ -43,22 +62,22 @@ namespace HomewreckersStudio
             }
         }
 
-        /** Implemented in platform module. */
+        /** Implemented in platform-specific module. */
         partial void GetImagePartial(ref Sprite image);
 
         /**
          * Gets the user's data.
          */
-        public void Initialize(Action success, Action failure)
+        public void Initialise(Action success, Action failure)
         {
-            Debug.Log("Initializing user");
+            Debug.Log("Initialising user");
 
-            SetEvents(success, failure);
+            m_request.SetListeners(success, failure);
 
-            InitializePartial();
+            InitialisePartial();
         }
 
-        /** Implemented in platform module. */
-        partial void InitializePartial();
+        /** Implemented in platform-specific module. */
+        partial void InitialisePartial();
     }
 }
